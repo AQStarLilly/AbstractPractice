@@ -27,6 +27,46 @@ public class Enemy : GameEntity
     }
 }
 
+public interface ICollectible
+{
+    void OnCollect();
+}
+
+public interface IUsable
+{
+    void Use();
+    int UsesLeft { get; set; }
+}
+
+public class HealingPotion : ICollectible, IUsable
+{
+    public int UsesLeft { get; set; }
+
+    public HealingPotion(int uses)
+    {
+        UsesLeft = uses;
+    }
+
+    public void OnCollect()
+    {
+        Console.WriteLine("Healing Potion collected!");
+    }
+
+    public void Use()
+    {
+        if(UsesLeft > 0)
+        {
+            UsesLeft--;
+            Console.WriteLine($"Healing potion used. Uses left: {UsesLeft}");
+        }
+        else
+        {
+            Console.WriteLine("No uses left for this healing potion.");
+        }
+    }
+}
+
+
 class Program
 {
     public static void CallAttack(GameEntity entity)
@@ -50,5 +90,14 @@ class Program
 
         Console.WriteLine("\nEnemy Movement:");
         enemy.Move();
+
+        Console.WriteLine("\nCreating and using a Healing potion:");
+        HealingPotion potion = new HealingPotion(3);
+
+        potion.OnCollect();
+        potion.Use();
+        potion.Use();
+        potion.Use();
+        potion.Use(); //Attempt to use when no uses are left
     }
 }
